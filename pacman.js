@@ -9,72 +9,85 @@ class Pacman {
         this.nextDirection = this.direction;
         this.currentFrame = 1;
         this.frameCount = 7;
+        this.isPoweredUp = false;
+        this.powerUpDuration = 5000;
 
         setInterval(() => {
-            this.changeAnimation()
+            this.changeAnimation();
         }, 100);
     }
 
     playerMovement() {
         this.changeDirectionIfPossible();
         this.moveForwards();
-        if(this.checkCollision()) {
-            this.moveBackwards();   
+        if (this.checkCollision()) {
+            this.moveBackwards();
         }
+        this.eat();
     }
 
     eat() {
         for (let i = 0; i < map.length; i++) {
-            for (let j = 0; j < map[0].length; j++){
-                if (map[i][j] == 2 && this.getMapX() == j && this.getMapY() == i){
+            for (let j = 0; j < map[0].length; j++) {
+                if (map[i][j] == 2 && this.getMapX() == j && this.getMapY() == i) {
                     map[i][j] = 3;
                     score++;
+                }
+                if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
+                    map[i][j] = 3;
+                    this.powerUp();
                 }
             }
         }
     }
 
+    powerUp() {
+        this.isPoweredUp = true;
+        setTimeout(() => {
+            this.isPoweredUp = false;
+        }, this.powerUpDuration);
+    }
+
     moveBackwards() {
-        switch(this.direction) {
+        switch (this.direction) {
             case DIRECTION_RIGHT:
                 this.x -= this.speed;
-                break
+                break;
             case DIRECTION_UP:
                 this.y += this.speed;
-                break
+                break;
             case DIRECTION_LEFT:
                 this.x += this.speed;
-                break
+                break;
             case DIRECTION_BOTTOM:
                 this.y -= this.speed;
-                break
+                break;
         }
     }
 
     moveForwards() {
-        switch(this.direction) {
+        switch (this.direction) {
             case DIRECTION_RIGHT:
                 this.x += this.speed;
-                break
+                break;
             case DIRECTION_UP:
                 this.y -= this.speed;
-                break
+                break;
             case DIRECTION_LEFT:
                 this.x -= this.speed;
-                break
+                break;
             case DIRECTION_BOTTOM:
-                this.y += this.speed
-                break
+                this.y += this.speed;
+                break;
         }
     }
 
     checkCollision() {
-        
-        if(
-           map[this.getMapY()][this.getMapX()] == 1 
-        || map[this.getMapYRightSide()][this.getMapX()] == 1
-        || map[this.getMapY()][this.getMapXRightSide()] == 1
-        || map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
+        if (
+            map[this.getMapY()][this.getMapX()] == 1 ||
+            map[this.getMapYRightSide()][this.getMapX()] == 1 ||
+            map[this.getMapY()][this.getMapXRightSide()] == 1 ||
+            map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
         ) {
             return true;
         }
@@ -82,22 +95,26 @@ class Pacman {
     }
 
     checkGhostCollision() {
-        for(let i = 0; i < ghosts.length; i++ ){
+        for (let i = 0; i < ghosts.length; i++) {
             let ghost = ghosts[i];
-            if(ghost.getMapX() == this.getMapX() && ghost.getMapY() == this.getMapY()) {
-                return true;
+            if (ghost.getMapX() == this.getMapX() && ghost.getMapY() == this.getMapY()) {
+                if (this.isPoweredUp) {
+                    ghosts.splice(i, 1);
+                } else {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     changeDirectionIfPossible() {
-        if(this.direction == this.nextDirection) return;
+        if (this.direction == this.nextDirection) return;
 
         let tempDirection = this.direction;
         this.direction = this.nextDirection;
         this.moveForwards();
-        if(this.checkCollision()) {
+        if (this.checkCollision()) {
             this.moveBackwards();
             this.direction = tempDirection;
         } else {
@@ -134,7 +151,7 @@ class Pacman {
             this.width,
             this.height
         );
-        
+
         canvasContext.restore();
     }
 

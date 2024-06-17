@@ -24,7 +24,7 @@ class Ghost {
     }
 
     ghostMovement() {
-        if(this.isInRangeOfPacman()) {
+        if(this.isInRangeOfPacman() && !pacman.isPoweredUp) {
             this.target = pacman;
         } else {
             this.target = randomTargetsForGhosts[this.randomTargetIndex];
@@ -35,7 +35,7 @@ class Ghost {
         if(this.checkCollision()) {
             this.moveBackwards();   
         }
-    }
+    } 
 
     moveBackwards() {
         switch(this.direction) {
