@@ -19,13 +19,13 @@ class Ghost {
     }
 
     changeRandomDirection() {
-        this.randomTargetIndex += 1;
+        this.randomTargetIndex += parseInt(Math.random() * 4);
         this.randomTargetIndex = this.randomTargetIndex % 4;
     }
 
     ghostMovement() {
         if(this.isInRangeOfPacman()) {
-            target = pacman;
+            this.target = pacman;
         } else {
             this.target = randomTargetsForGhosts[this.randomTargetIndex];
         }
@@ -82,10 +82,6 @@ class Ghost {
             return true;
         }
         return false;
-    }
-
-    checkGhostCollision() {
-
     }
 
     isInRangeOfPacman(){
@@ -199,6 +195,18 @@ class Ghost {
         );
         
         canvasContext.restore();
+
+        //··· DEGUG (GHOSTS PATH) ···//
+        // canvasContext.beginPath();
+        // canvasContext.strokeStyle = "red";
+        // canvasContext.arc(
+        // this. x + blockSize / 2,
+        // this.y +blockSize / 2, 
+        // this.range * blockSize, 
+        // 0, 
+        // 2 * Math.PI);
+        // canvasContext.stroke();
+        //···························//
     }
 
     getMapX() {

@@ -18,6 +18,8 @@ let foodColor = "#FEB897";
 let score = 0;
 let ghosts = [];
 let ghostCount = 4;
+let lives = 3;
+let foodCount = 0;
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
@@ -57,6 +59,14 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
+for (let i = 0; i < map.length; i++) {
+    for (let j = 0; j < map[0].length; j++) {
+        if (map[i][j] == 2) {
+            foodCount++;    
+        }
+    }
+}
+
 let randomTargetsForGhosts = [
     {x: 1 * blockSize, y: 1 * blockSize},
     {x: 1 * blockSize, y: (map.length - 2) * blockSize},
@@ -65,13 +75,73 @@ let randomTargetsForGhosts = [
 ];
 
 let gameLoop = () => {
-    update();
     draw();
+    update();
 }
 
 let update = () => {
     pacman.playerMovement();
     pacman.eat();
+
+    for(let i = 0; i < ghosts.length; i++){
+        ghosts[i].ghostMovement();
+    }
+
+    if(pacman.checkGhostCollision()) {
+        console.log("hit");
+        restartGame();
+    }
+
+    if(score >= foodCount) {
+        drawWin();
+        clearInterval(gameInterval);
+    }
+}
+
+restartGame = () => {
+    createNewPacman();
+    createGhosts();
+    lives--;
+    if(lives == 0){
+        gameOver();
+    }
+}
+
+gameOver = () => {
+    drawGameOver();
+    clearInterval(gameInterval);
+}
+
+let drawGameOver = () => {
+    canvasContext.font = "30px 'Pixelify Sans'";
+    canvasContext.fillStyle = "White";
+    canvasContext.fillText("Game Over!", 140, 225)
+}
+
+let drawWin = () => {
+    canvasContext.font = "30px 'Pixelify Sans'";
+    canvasContext.fillStyle = "White";
+    canvasContext.fillText("You Win!", 155, 225)
+}
+
+let drawLives = () => {
+    canvasContext.font = "30px 'Pixelify Sans'";
+    canvasContext.fillStyle = "White";
+    canvasContext.fillText("Lives: ", 220, blockSize * (map.length + 1) + 10);
+
+    for(let i = 0; i < lives; i++){
+        canvasContext.drawImage(
+            pacmanFrames,
+            2 * blockSize,
+            0,
+            blockSize,
+            blockSize,
+            310 + i * blockSize,
+            blockSize * map.length + 12,
+            blockSize,
+            blockSize
+        );
+    }
 }
 
 let drawFoods = () => {
@@ -109,6 +179,7 @@ let draw = () => {
     pacman.draw();
     drawScore();
     drawGhosts();
+    drawLives();
 }
 
 let gameInterval = setInterval(gameLoop, 1000/fps);
