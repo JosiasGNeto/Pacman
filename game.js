@@ -2,6 +2,7 @@ const canvas = document.getElementById("canvas");
 const canvasContext = canvas.getContext("2d");
 const pacmanFrames = document.getElementById("animations");
 const ghostsFrames = document.getElementById("ghosts");
+const ghostsDangerFrames = document.getElementById("ghosts_danger");
 
 let creatRect = (x, y, width, height, color) => {
     canvasContext.fillStyle = color;
@@ -43,9 +44,9 @@ let map = [
     [1, 2, 2, 2, 2, 4, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1], 
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-    [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+    [1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
@@ -88,11 +89,10 @@ let update = () => {
     }
 
     if(pacman.checkGhostCollision()) {
-        console.log("hit");
         restartGame();
     }
 
-    if(score >= foodCount) {
+    if(score >= foodCount || ghostCount == 0) {
         drawWin();
         clearInterval(gameInterval);
     }
@@ -112,6 +112,12 @@ gameOver = () => {
     clearInterval(gameInterval);
 }
 
+let drawScore = () => {
+    canvasContext.font = "30px 'Pixelify Sans'";
+    canvasContext.fillStyle = "White";
+    canvasContext.fillText("SCORE: " + score, 70, blockSize * (map.length + 1) + 10);
+}
+
 let drawGameOver = () => {
     canvasContext.font = "30px 'Pixelify Sans'";
     canvasContext.fillStyle = "White";
@@ -127,7 +133,7 @@ let drawWin = () => {
 let drawLives = () => {
     canvasContext.font = "30px 'Pixelify Sans'";
     canvasContext.fillStyle = "White";
-    canvasContext.fillText("Lives: ", 220, blockSize * (map.length + 1) + 10);
+    canvasContext.fillText("LIVES: ", 235, blockSize * (map.length + 1) + 10);
 
     for(let i = 0; i < lives; i++){
         canvasContext.drawImage(
@@ -136,7 +142,7 @@ let drawLives = () => {
             0,
             blockSize,
             blockSize,
-            310 + i * blockSize,
+            330 + i * blockSize,
             blockSize * map.length + 12,
             blockSize,
             blockSize
@@ -177,12 +183,6 @@ let drawSpecialFood = () => {
             }
         }
     }
-}
-
-let drawScore = () => {
-    canvasContext.font = "30px 'Pixelify Sans'";
-    canvasContext.fillStyle = "White";
-    canvasContext.fillText("SCORE: " + score, 0, blockSize * (map.length + 1) + 10);
 }
 
 let drawGhosts = () => {

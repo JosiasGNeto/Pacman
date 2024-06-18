@@ -182,17 +182,33 @@ class Ghost {
 
     draw() {
         canvasContext.save();
-        canvasContext.drawImage(
-            ghostsFrames,
-            this.imageX,
-            this.imageY,
-            this.imageWidth,
-            this.imageHeight,
-            this.x,
-            this.y,
-            this.width,
-            this.height
-        );
+
+        if(!pacman.isPoweredUp){
+            canvasContext.drawImage(
+                ghostsFrames,
+                this.imageX,
+                this.imageY,
+                this.imageWidth,
+                this.imageHeight,
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            );
+        } else {
+            canvasContext.drawImage(
+                ghostsDangerFrames,
+                this.imageX,
+                this.imageY,
+                this.imageWidth,
+                this.imageHeight,
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            );
+        }
+
         
         canvasContext.restore();
 
@@ -224,4 +240,4 @@ class Ghost {
     getMapYRightSide() {
         return parseInt((this.y + 0.9999 * blockSize) / blockSize);
     }
-}
+}   

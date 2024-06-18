@@ -100,6 +100,7 @@ class Pacman {
             if (ghost.getMapX() == this.getMapX() && ghost.getMapY() == this.getMapY()) {
                 if (this.isPoweredUp) {
                     ghosts.splice(i, 1);
+                    ghostCount--;
                 } else {
                     return true;
                 }
