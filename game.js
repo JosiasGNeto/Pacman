@@ -9,6 +9,8 @@ let creatRect = (x, y, width, height, color) => {
     canvasContext.fillRect(x, y, width, height);
 }
 
+let pacmanEat = new Audio('assets/pacman_sound.mp3');
+
 let fps = 30;
 let blockSize = 20;
 let wallColor = "#342DCA";
@@ -155,10 +157,10 @@ let drawFoods = () => {
         for (let j = 0; j < map[0].length; j++) {
             if (map[i][j] == 2) {
                 creatRect(
-                    j * blockSize + blockSize / 3,
-                    i * blockSize + blockSize / 3,
-                    blockSize / 3,
-                    blockSize / 3,
+                    j * blockSize + blockSize / 2.5,
+                    i * blockSize + blockSize / 2.5,
+                    blockSize / 4,
+                    blockSize / 4,
                     foodColor
                 );
             }
